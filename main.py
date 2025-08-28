@@ -43,8 +43,42 @@ agent:Agent = Agent(
     model="gpt-4o-mini"
 )
 
+math_tutor = Agent(
+    name="Math Tutor",
+    instructions="You are a precise math tutor. Always show your work step by step.",
+    model_settings=ModelSettings(
+        temperature=0.1,  # Very focused
+        max_tokens=500    # Enough for detailed steps
+    )
+)
+
+creative_writer = Agent(
+    name="Creative Writer",
+    instructions="You are a creative storyteller. Write engaging, imaginative stories.",
+    model_settings=ModelSettings(
+        temperature=0.8,  # Very creative
+        max_tokens=300    # Short but creative
+    ),
+    model="gpt-4o-mini"
+)
+
+@function_tool
+def calculate_area(length: float, width: float) -> str:
+    """Calculate the area of a rectangle."""
+    area = length * width
+    return f"Area = {length} × {width} = {area} square units"
+
+# Agent that MUST use tools
+tool_user = Agent(
+    name="Tool User",
+    instructions="You are a helpful assistant. Always use tools when available.",
+    tools=[calculate_area],
+    model_settings=ModelSettings(tool_choice="required"),
+    model=llm_model
+)
+
 async def new():
-    result = await Runner.run(agent,"write the story about panda and a wolf")
+    result = await Runner.run(tool_user,"what is ai")
     print(result.final_output)
 
 asyncio.run(new())
