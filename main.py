@@ -17,11 +17,12 @@ external_client=AsyncOpenAI(
 
 llm_model:OpenAIChatCompletionsModel = OpenAIChatCompletionsModel(
     openai_client=external_client,
-    model="gemini-2.0-flash"
+    model="gemini-2.5-flash-lite"
 
 )
 config=RunConfig(
     tracing_disabled=False,
+    model=llm_model,
     model_provider=external_client
 )
 
@@ -73,12 +74,28 @@ tool_user = Agent(
     name="Tool User",
     instructions="You are a helpful assistant. Always use tools when available.",
     tools=[calculate_area],
-    model_settings=ModelSettings(tool_choice="required"),
-    model=llm_model
+    model_settings=ModelSettings(tool_choice="auto"),
+    
+)
+agent_none = Agent(
+        name="None",
+        tools=[calculate_area],
+        model_settings=ModelSettings(tool_choice="none"),
+        
+    )
+agent_brief = Agent(
+    name="Brief Assistant",
+    model_settings=ModelSettings(max_tokens=400)
+)
+
+agent_detailed = Agent(
+    name="Detailed Assistant", 
+    instructions="You are a detailed and thorough assistant. Provide comprehensive and well-explained answers. if tokens are exceeded give brief relp and use less tokens",
+    model_settings=ModelSettings(max_tokens=1000)
 )
 
 async def new():
-    result = await Runner.run(tool_user,"what is ai")
+    result = await Runner.run(agent_detailed,"What is economic condition of Pakistan in 2025", run_config=config)
     print(result.final_output)
 
 asyncio.run(new())
