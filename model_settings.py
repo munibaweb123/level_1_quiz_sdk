@@ -1,5 +1,6 @@
 from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, RunConfig, RunContextWrapper, Runner, function_tool
 import os
+from agents.agent import StopAtTools
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 load_dotenv()
@@ -121,6 +122,9 @@ agent_required = Agent(
     name="Tool user",
     tools=[calculator, weather],
     model_settings=ModelSettings(tool_choice='required'),
+    #tool_use_behavior="stop_on_first_tool",
+    #tool_use_behavior=StopAtTools(stop_at_tool_names=["weather"]),
+    tool_use_behavior="run_llm_again", # by default set for tool use behavior
     #model='gpt-4o-mini'
     model=model
 )
@@ -168,6 +172,6 @@ sequential_agent = Agent(
 )
 
 # result=Runner.run_sync(focused_agent,"what is openai agents sdk?")
-result = Runner.run_sync(agent_creative, "write the innovative story about AI and humans coexisting in future.")
+result = Runner.run_sync(agent_required, "what today weather in new york ")
 print(result.final_output)
 
