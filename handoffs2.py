@@ -52,8 +52,8 @@ weather_agent: Agent = Agent(
     instructions="You are weather expert - share weather updates as I travel a lot. For all Tech and News let the NewsAgent handle that part by delegation.",
     model=llm_model,
     tools=[get_weather],
-    #handoffs=[handoff(agent=news_agent,input_filter=summarized_news_transfer)]
-    handoffs=[handoff(agent=news_agent,input_filter=handoff_filters.remove_all_tools)]
+    handoffs=[handoff(agent=news_agent,input_filter=summarized_news_transfer)]
+    #handoffs=[handoff(agent=news_agent,input_filter=handoff_filters.remove_all_tools)]
 )
 
 async def main():
