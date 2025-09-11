@@ -1,11 +1,12 @@
 import os
 from dotenv import load_dotenv, find_dotenv
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, handoff, RunContextWrapper
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, handoff, RunContextWrapper, enable_verbose_stdout_logging
 from pydantic import BaseModel
 _: bool = load_dotenv(find_dotenv())
+enable_verbose_stdout_logging()
 
 # ONLY FOR TRACING
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
+#os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
 
 gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
 
@@ -34,6 +35,8 @@ def get_weather(city: str) -> str:
 # define on_handoff callback
 async def on_handoff_callback(ctx: RunContextWrapper[Weather],input_data:Weather):
     print(f"\n[HANDOFF] delegating with input: {input_data} ")
+    #print(f"city: {ctx.context.city}")
+    #print(f"reason: {ctx.context.reason}")
     return input_data
 
 news_agent: Agent = Agent(
@@ -50,17 +53,21 @@ weather_agent: Agent = Agent(
     tools=[get_weather],
     handoffs=[
         handoff(
+            
             agent=news_agent,
             on_handoff=on_handoff_callback,
-            input_type=Weather  # optional: agar structured input chahiye
+            input_type=Weather,  # optional: agar structured input chahiye
+            tool_name_override="latest_news",
+            tool_description_override="latest tech news"
         )
     ]
 )
 
 
 
-res = Runner.run_sync(weather_agent, "Check if there's any news about OpenAI after GPT-5 launch and weather of karachi?")
+res = Runner.run_sync(weather_agent, "Check if there's any news about openai release and weather of karachi?")
 print("\nAGENT NAME", res.last_agent.name)
 print("\n[RESPONSE:]", res.final_output)
+
 
 # Now check the trace in 

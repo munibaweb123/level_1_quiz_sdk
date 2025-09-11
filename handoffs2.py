@@ -24,11 +24,11 @@ llm_model = OpenAIChatCompletionsModel(
 )
 
 def summarized_news_transfer(data: HandoffInputData)-> HandoffInputData:
-    print("\n[Handoff] Summarizing new transfer..\n")
+    #print("\n[Handoff] Summarizing new transfer..\n")
     summarized_conversation = "Get latest tech news"
-    print("\n\n[ITEM 1]", data.input_history)
-    print("\n\n[ITEM 2]",data.pre_handoff_items)
-    print("\n\n[ITEM 3]",data.new_items)
+    #print("\n\n[ITEM 1]", data.input_history)
+    #print("\n\n[ITEM 2]",data.pre_handoff_items)
+    #print("\n\n[ITEM 3]",data.new_items)
 
     return HandoffInputData(
         input_history=summarized_conversation,
@@ -38,7 +38,7 @@ def summarized_news_transfer(data: HandoffInputData)-> HandoffInputData:
 
 @function_tool
 def get_weather(city:str)->str:
-    return f"The weather in {city} is sunny with a high of 75°F."
+    return f"The weather in {city} is sunny with a high of 27°C."
 
 news_agent: Agent = Agent(
     name="NewsAgent",
@@ -52,8 +52,9 @@ weather_agent: Agent = Agent(
     instructions="You are weather expert - share weather updates as I travel a lot. For all Tech and News let the NewsAgent handle that part by delegation.",
     model=llm_model,
     tools=[get_weather],
-    handoffs=[handoff(agent=news_agent,input_filter=summarized_news_transfer)]
-    #handoffs=[handoff(agent=news_agent,input_filter=handoff_filters.remove_all_tools)]
+    #handoffs=[handoff(agent=news_agent,input_filter=summarized_news_transfer)]
+    #handoffs=[news_agent]
+    handoffs=[handoff(agent=news_agent,input_filter=handoff_filters.remove_all_tools)]
 )
 
 async def main():
