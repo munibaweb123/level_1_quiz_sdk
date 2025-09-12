@@ -29,3 +29,5 @@
     + tool_description_override
     + on_handoff
 - guardrails
+    + input guardrails
+    + output guardrails
