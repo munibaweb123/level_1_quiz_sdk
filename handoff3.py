@@ -1,9 +1,10 @@
 import os
 from dotenv import load_dotenv, find_dotenv
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, handoff, RunContextWrapper, enable_verbose_stdout_logging
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, handoff, RunContextWrapper
 from pydantic import BaseModel
 _: bool = load_dotenv(find_dotenv())
-enable_verbose_stdout_logging()
+#from agents import enable_verbose_stdout_logging
+#enable_verbose_stdout_logging()
 
 # ONLY FOR TRACING
 #os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
@@ -46,13 +47,8 @@ news_agent: Agent = Agent(
     tools=[get_weather],
 )
 
-weather_agent: Agent = Agent(
-    name="WeatherAgent",
-    instructions="You are weather expert - share weather updates as I travel a lot. For all Tech and News let the NewsAgent handle that part by delegation.",
-    model=llm_model,
-    tools=[get_weather],
-    handoffs=[
-        handoff(
+
+news_tool=   handoff(
             
             agent=news_agent,
             on_handoff=on_handoff_callback,
@@ -60,7 +56,14 @@ weather_agent: Agent = Agent(
             tool_name_override="latest_news",
             tool_description_override="latest tech news"
         )
-    ]
+    
+
+weather_agent: Agent = Agent(
+    name="WeatherAgent",
+    instructions="You are weather expert - share weather updates as I travel a lot. For all Tech and News let the NewsAgent handle that part by delegation.",
+    model=llm_model,
+    tools=[get_weather],
+    handoffs=[news_tool]
 )
 
 
@@ -68,6 +71,7 @@ weather_agent: Agent = Agent(
 res = Runner.run_sync(weather_agent, "Check if there's any news about openai release and weather of karachi?")
 print("\nAGENT NAME", res.last_agent.name)
 print("\n[RESPONSE:]", res.final_output)
+print("tool name is: ",news_tool.tool_name)
 
 
 # Now check the trace in 
