@@ -1,6 +1,7 @@
 # Level 1 Quiz Preparation
 - OpenAI Agents SDK introduction
 - from OpenAI Agents SDK documentation: https://openai.github.io/openai-agents-python/
+- and Sir Zia repo: https://github.com/panaversity/learn-agentic-ai/tree/main/01_ai_agents_first
 ## Topics cover:
 - model settings
     * top-p
