@@ -1,7 +1,7 @@
 import asyncio
 import os
 from openai import AsyncOpenAI
-from pydantic import BaseModel
+from pydantic_bm import BaseModel
 from agents import (
     Agent,
     GuardrailFunctionOutput,

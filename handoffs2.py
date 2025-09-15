@@ -3,7 +3,7 @@ import os
 
 from dotenv import load_dotenv, find_dotenv
 from openai import AsyncOpenAI
-from pydantic import BaseModel
+from pydantic_bm import BaseModel
 from agents import Agent, HandoffInputData, OpenAIChatCompletionsModel, Runner, function_tool, set_tracing_disabled, handoff
 from agents.extensions import handoff_filters
 from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX

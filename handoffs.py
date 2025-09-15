@@ -3,7 +3,7 @@ import os
 
 from dotenv import load_dotenv, find_dotenv
 from openai import AsyncOpenAI
-from pydantic import BaseModel
+from pydantic_bm import BaseModel
 from agents import Agent, OpenAIChatCompletionsModel, Runner, set_tracing_disabled, handoff
 
 _: bool = load_dotenv(find_dotenv())

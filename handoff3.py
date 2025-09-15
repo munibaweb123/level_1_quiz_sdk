@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, handoff, RunContextWrapper
-from pydantic import BaseModel
+from pydantic_bm import BaseModel
 _: bool = load_dotenv(find_dotenv())
 #from agents import enable_verbose_stdout_logging
 #enable_verbose_stdout_logging()
