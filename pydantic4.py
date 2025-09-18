@@ -24,7 +24,7 @@ user = User(
     name="Muniba",
     email="muni@gmail.com",
     is_active=True,
-    createdAt=datetime.utcnow(),
+    createdAt=datetime(2025, 9, 18),
     address=address,
     tags=["pydantic", "agentic-ai"]
 )
