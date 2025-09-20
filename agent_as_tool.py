@@ -1,9 +1,10 @@
-from agents import Agent, ModelSettings, AsyncOpenAI, RunContextWrapper, Runner, function_tool,OpenAIChatCompletionsModel, RunConfig
+from agents import Agent, ModelSettings, AsyncOpenAI, RunContextWrapper, Runner,OpenAIChatCompletionsModel, RunConfig, enable_verbose_stdout_logging
 import os
 import asyncio
 from dotenv import load_dotenv
 from pydantic import BaseModel
 load_dotenv()
+enable_verbose_stdout_logging()
 
 gemini_api_key = os.getenv('GEMINI_API_KEY')
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -67,7 +68,7 @@ orchestrator_agent = Agent(
 async def main():
     context = RunContextWrapper(LanguageContext(language_preference="french_spanish"))
     result = await Runner.run(orchestrator_agent, input="Say 'best of luck for quiz level 1' in Spanish and French.",run_config=config,
-                              max_turns=5, context=context.context)
+                              max_turns=2, context=context.context)
     print(result.final_output)
 
 asyncio.run(main())

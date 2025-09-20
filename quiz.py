@@ -37,18 +37,18 @@ math_agent = Agent(
     name="MathAgent",
     instructions="You are an expert at math. Use your tools to solve problems.",
     tools=[add],
-    model='gpt-4o-mini'
+    #model='gpt-4o-mini'
 )
 
 router_agent = Agent(
     name="RouterAgent",
     instructions="You are a router. If the user asks a math question, you must handoffs to the MathAgent. Otherwise, say you cannot help.",
     tools = [],
-    model='gpt-4o-mini'
+    #model='gpt-4o-mini'
 )
 
 
-res = Runner.run_sync(router_agent, "What is 5 plus 7?")
+res = Runner.run_sync(router_agent, "What is 5 plus 7?",run_config=config)
 print(res.final_output)
 print(res.last_agent)
 
