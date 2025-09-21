@@ -36,8 +36,8 @@ math_agent = Agent(
     name="math agent",
     instructions="you are helpful assistant don't use tool",
     tools=[add],
-    model_settings=ModelSettings(temperature=1.9, top_p=0.9, max_tokens=200, tool_choice=None)
+    model_settings=ModelSettings(temperature=1.9, top_p=0.1, max_tokens=1500, tool_choice=None)
 )
 
-res = Runner.run_sync(math_agent,"what is addition",run_config=config)
+res = Runner.run_sync(math_agent,"what is agentic ai",run_config=config)
 print(res.final_output)

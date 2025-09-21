@@ -1,12 +1,14 @@
-from datetime import datetime
-from typing import Optional
+#from dataclasses import dataclass
 from pydantic.dataclasses import dataclass
+from datetime import datetime
 
 @dataclass
 class User:
     id:int
-    name:str = 'John Doe'
-    signup_ts: Optional[datetime] = None
+    name:str
+    signup_ts:datetime
 
-user = User(id='23',signup_ts='2025-09-20 03:45',name='Muniba')
+user1 = {'id': 11, 'name': 'muniba', 'signup_ts': datetime(2025, 9, 21, 11, 30, 33)}
+user = User(**user1)
+
 print(user)

@@ -1,5 +1,5 @@
 import asyncio
-from agents import Agent, AsyncOpenAI, Runner, function_tool,OpenAIChatCompletionsModel, RunConfig, enable_verbose_stdout_logging
+from agents import Agent, AsyncOpenAI, Runner, function_tool,OpenAIChatCompletionsModel, RunConfig ,enable_verbose_stdout_logging
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -33,11 +33,11 @@ async def get_weather(city:str):
 
 agent:Agent=Agent(
     name="assistant",
-    instructions="you are a helpful assistant, answer user query",
-    #tools=[get_weather]
+    instructions="you are a helpful agent, use tool to fetch weather",
+    tools=[get_weather]
 )
 async def main():
-    res =await Runner.run(agent,"tell me about agentic ai?",max_turns=1,run_config=config)
+    res =await Runner.run(agent,"what is the weather of Lahore",max_turns=2,run_config=config)
     print(res.final_output)
 
 asyncio.run(main())
