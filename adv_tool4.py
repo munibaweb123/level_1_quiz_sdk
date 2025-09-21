@@ -2,13 +2,17 @@ import os
 import asyncio
 import requests
 from dotenv import load_dotenv, find_dotenv
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, RunContextWrapper
-
 # Load environment variables
 _: bool = load_dotenv(find_dotenv())
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, function_tool, RunContextWrapper
+
+
 
 # ONLY FOR TRACING
+os.getenv('OPENAI_AGENTS_DISABLE_TRACING')
+print("Tracing disabled:", os.getenv("OPENAI_AGENTS_DISABLE_TRACING"))
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
+
 
 gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
 
@@ -62,9 +66,11 @@ base_agent: Agent = Agent(
     tools=[get_weather],
 )
 
+base_agent
+
 # -------- Runner --------
 async def main():
-    res = await Runner.run(base_agent, "What is weather in Karachi?")
+    res = await Runner.run(base_agent, "What is weather in Islamabad?")
     print("Agent Response:", res.final_output)
 
 if __name__ == "__main__":
