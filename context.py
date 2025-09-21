@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from agents import Agent, RunContextWrapper, Runner, OpenAIChatCompletionsModel, RunConfig, function_tool
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BaseModel
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -26,15 +26,16 @@ config = RunConfig(
     model_provider=external_client,
     tracing_disabled=False
 )
-# @dataclass
-# class UserContext:
-#     user_name: str
-#     user_role: str
-#     user_experience: str
 
-# @function_tool
-# async def greet_user(ctx:RunContextWrapper[UserContext], greeting:str)->str:
-#     return f"{greeting}, user {ctx.context.user_name} with role {ctx.context.user_role} and experience {ctx.context.user_experience}"
+class UserContext(BaseModel):
+    user_id:int
+    user_name: str
+    user_role: str
+    user_experience: str
+
+@function_tool
+async def greet_user(ctx:RunContextWrapper[UserContext], greeting:str)->str:
+    return f"{greeting}, user {ctx.context.user_name} with role {ctx.context.user_role} and experience {ctx.context.user_experience}"
 
 
 
@@ -58,15 +59,17 @@ context_agent = Agent(
 
 
 async def main():
-    # user_context = UserContext(
-    #     user_name="Nitoo",
-    #     user_role="Agentic ai developer",
-    #     user_experience="2 years"
-    # )
+    user_context = UserContext(
+        user_id="one-two-three", # throw type error by pydantic, input should be a valid integer
+        user_name="Nitoo",
+        user_role="Agentic ai developer",
+        user_experience="2 years"
+    )
     result = await Runner.run(
         starting_agent=context_agent,
         input="Hi there!",
-        context={"age": 25, "name": "Nitoo"},
+        #context={"age": 25, "name": "Nitoo"},
+        context=user_context,
         run_config=config
     )
     print(f"Output is {result.final_output}")
